@@ -1,0 +1,21 @@
+.inputSearch {
+    padding: 10px;
+    outline: none;
+    border: 5px solid grey;
+    border-radius: 10px;
+}
+
+.buttonSearch {
+    background: orange;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 10px;
+    margin-left: 10px;
+    outline: none;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.buttonSearch:hover {
+    background: darkorange;
+}
