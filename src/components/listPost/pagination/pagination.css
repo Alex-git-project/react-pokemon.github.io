@@ -1,0 +1,34 @@
+.list {
+    display: flex;
+    width: 30%;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+    margin: 20px auto;
+}
+
+.listItem {
+    font-size: 14px;
+    font-weight: 600;
+    color: darkgrey;
+    transition: 0.3s;
+}
+
+.listItemActive {
+    font-size: 14px;
+    font-weight: 600;
+    color: black;
+    transition: 0.3s;
+}
+
+.listItem:hover {
+    color: grey;
+    cursor: pointer;
+}
+
+.listItem:active {
+    color: black;
+    position: relative;
+    top: -5px;
+}
+

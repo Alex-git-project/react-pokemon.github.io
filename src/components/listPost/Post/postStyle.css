@@ -1,11 +1,12 @@
 .item {
-    width: 200px;
-    height: 250px;
+    width: 230px;
+    height: 300px;
     border-radius: 10px;
     padding: 10px;
     box-sizing: border-box;
     background: darkgrey;
     margin: 5px;
+    border: 1px solid black;
 }
 
 .imageBox {
@@ -21,11 +22,19 @@
 
 .descriptionPost {
     display: flex;
-    width: 60%;
-    justify-content: space-between;
     list-style: none;
     padding: 0;
+    flex-wrap: wrap;
+}
+
+.descriptionPost li {
+    font-weight: 600;
+    font-size: 11px;
+    background: darkorange;
     margin: 5px;
+    white-space: nowrap;
+    padding: 4px;
+    border-radius: 5px;
 }
 
 .item:hover {

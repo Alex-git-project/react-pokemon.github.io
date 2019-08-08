@@ -1,0 +1,61 @@
+.hiddenBox {
+    height: 0;
+    overflow: hidden;
+    transition: 1s;
+    width: 350px;
+}
+
+.activeList {
+    width: 150px;
+    height: 50px;
+    background: orangered;
+    border-radius: 10px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+.listItemAdvansed {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+}
+
+.itemAdvansed {
+    width: 48%;
+    display: flex;
+    justify-content: space-between;
+    color: grey;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.buttonSearchAdvanced {
+    width: 80px;
+    height: 40px;
+    background: lawngreen;
+    border-radius: 5px;
+    border: 1px solid black;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    outline: none;
+}
+
+.buttonSearchAdvanced:active , .activeList:active {
+    background: white;
+    color: black;
+}
+
+@media (min-width: 320px) and (max-width: 425px) {
+    .listItemAdvansed {
+        display: block;
+    }
+}

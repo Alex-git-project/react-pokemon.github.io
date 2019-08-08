@@ -1,34 +1,81 @@
-import React , {useEffect} from 'react';
+import React, {useEffect , useState} from 'react';
 import {inject, observer} from 'mobx-react';
 import './postStyle.css';
-import {FaSistrix} from 'react-icons/fa';
-
 
 const Post = inject('TodoStore')(observer(props => {
+
     const TodoStore = props.TodoStore;
-    const pokemon = TodoStore.pokemons[props.name];
+    debugger
 
-    useEffect(() => {
-        TodoStore.getObjPokemin(props.name)
-    },[])
+    const [pokemon , setPokemon] = useState(TodoStore.pokemons[props.name]);
 
-    console.log(pokemon)
+    useEffect( () => {
+        fetch(TodoStore.pokemons[props.name].url)
+            .then(res => res.json())
+            .then(json => {
+                setPokemon(json)
+            });
+    },[]);
+
+
+    let mass;
+    let imagePokemon;
+    if (pokemon.abilities) {
+        mass = pokemon.abilities.map(item => <li>{item.ability.name}</li>);
+        imagePokemon = (<img className="imgPost" src={pokemon.sprites.front_shiny}/>)
+    }
+
     return (
         <li>
             <div className='item'>
                 <div className='imageBox'>
-                    <img className="imgPost" src='https://assets.pokemon.com/assets/cms2/img/pokedex/detail/001.png'/>
+                    {imagePokemon}
                 </div>
                 <div className='postData'>
-                    <h4>{props.name}</h4>
+                    <h4>{pokemon.name}</h4>
                     <ul className="descriptionPost">
-                        <li>ubivan</li>
-                        <li>hidden</li>
+                        {mass}
                     </ul>
                 </div>
             </div>
         </li>
     );
 }));
+
+/*@inject('TodoStore')
+@observer
+class Post extends Component {
+
+    componentDidMount() {
+        this.props.TodoStore.getObjPokemin(this.props.name);
+    }
+
+    render() {
+        const TodoStore = this.props.TodoStore;
+        const pokemon = TodoStore.pokemons[this.props.name];
+        let mass;
+        let imagePokemon;
+        if (pokemon.abilities) {
+            mass = pokemon.abilities.map(item => <li>{item.ability.name}</li>);
+            imagePokemon = (<img className="imgPost" src={pokemon.sprites.front_shiny}/>)
+        }
+
+        return (
+            <li>
+                <div className='item'>
+                    <div className='imageBox'>
+                        {imagePokemon}
+                    </div>
+                    <div className='postData'>
+                        <h4>{pokemon.name}</h4>
+                        <ul className="descriptionPost">
+                            {mass}
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        );
+    }
+};*/
 
 export default Post;

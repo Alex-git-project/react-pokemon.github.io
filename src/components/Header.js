@@ -7,7 +7,7 @@ const Header = inject('TodoStore')(observer(props => {
   return (
       <header>
           <div className="headerTitleSection">
-              <div className="pageRow">
+              <div className="page-row">
                   <h1 className="generalHeader">Pokemons</h1>
               </div>
           </div>
