@@ -14,21 +14,26 @@ const AdvancedSearch = inject('TodoStore')(observer(props => {
     let hiddenList = document.getElementById('hiddenList');
     const TodoStore = props.TodoStore;
 
+    //getting fields for advanced search
     isEmpty(TodoStore.ability) ? TodoStore.setAbility() : false;
 
     function search(e) {
-        e.preventDefault()
-        let dataSearch = getCheckedCheckBoxes();
+        e.preventDefault() //cancel click-through
+        let dataSearch = getCheckedCheckBoxes(); //getting marked checkboxes
+
         dataSearch.length ?
-            (TodoStore.setActiveAbility(dataSearch),TodoStore.activeSearch = true ):
-            (TodoStore.setApiPokemins(),TodoStore.activeSearch = false);
+            (TodoStore.setActiveAbility(dataSearch), TodoStore.activeSearch = true , TodoStore.activeAbility = true) :
+            (TodoStore.setApiPokemins(), TodoStore.activeSearch = false, TodoStore.activeAbility = false) ;
     }
 
+
+    //getting element height
     function getHeight(obj) {
         let style = window.getComputedStyle(obj);
         return style.getPropertyValue('height');
     }
 
+    //advanced search exit
     function active() {
         parseInt(getHeight(hiddenBox)) == 0 ?
             hiddenBox.style.height = (parseInt(getHeight(hiddenList)) + 40) + 'px' :

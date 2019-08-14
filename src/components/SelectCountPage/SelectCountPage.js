@@ -14,14 +14,17 @@ const SelectCountPage = inject('TodoStore')(observer(props => {
 
     let arrSizePage = Object.values(quantituSize);
 
-    let arr = arrSizePage.map(item => <div className={`countPageSize ${item == TodoStore.pageSize ? 'activeSize': ''}`} onClick={updatePageSize} data-size={item}>{item}</div>)
+    let list = arrSizePage.map(item =>
+        <div className={`countPageSize ${item == TodoStore.pageSize ? 'activeSize' : ''}`} onClick={updatePageSize}
+             data-size={item}>
+            {item}</div>)
     return (
         <div className="page-row">
             <div className="boxSelect">
                 <div className="viewCount">
-                    <span className='textComponent'>count pokemons {TodoStore.pageSize}</span>
+                    <span className='textComponent'>count pokemon {TodoStore.pageSize}</span>
                     <div className="viewCountChildren">
-                        {arr}
+                        {list}
                     </div>
                 </div>
             </div>

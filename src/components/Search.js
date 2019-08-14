@@ -4,27 +4,34 @@ import './search.css'
 import '../App.css'
 import {debounce} from "lodash"
 
-const Search = inject('TodoStore')(observer(props => {
+const Search = inject('TodoStore')((props => {
     const TodoStore = props.TodoStore;
 
     let propSymb = function (obj) {
         return Object.getOwnPropertyNames(obj)
     };
 
-    let pokemonsCount = (propSymb(TodoStore.pokemons).length) - 1;
+    let pokemonCount = (propSymb(TodoStore.pokemon).length) - 1;
 
     let updateInput = debounce((text) => {
+    debugger
+        text != "" ?
+            !TodoStore.activeAbility ?
+                TodoStore.totalPokemon != pokemonCount ?
+                    (TodoStore.getSearch(), TodoStore.updateSearch(text) , TodoStore.activeSearch = true) : false :
+                TodoStore.updateSearch(text) :
+            false
 
-        TodoStore.totalPokemons != pokemonsCount && text != "" ?
-            (TodoStore.getSearch(), TodoStore.updateSearch(text) , TodoStore.activeSearch = true) :
+
+        text == "" ?
+            !TodoStore.activeAbility ? (
+                TodoStore.clearMass(),
+                    TodoStore.activeSearch = false,
+                    TodoStore.setApiPokemins(),
+                    TodoStore.updateSearch(text)
+            ) : TodoStore.updateSearch(text) :
             false;
 
-        if (text == "") {
-            TodoStore.clearMass()
-            TodoStore.activeSearch = false
-            TodoStore.setApiPokemins()
-            TodoStore.updateSearch(text);
-        }
     }, 2000);
 
 

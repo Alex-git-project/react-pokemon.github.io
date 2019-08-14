@@ -5,9 +5,22 @@ import './pagination.css'
 
 const Pagination = inject('TodoStore')(observer(props => {
     const TodoStore = props.TodoStore;
+
     let currentPage = TodoStore.currentPage;
-    let minimumAllowable = currentPage > 2 ? currentPage-1:0;
-    let maximumAllowable = currentPage > 2 ? currentPage+3:5;
+
+    let totalPage = TodoStore.getQuantituPage();
+
+    let minimumAllowable = 0;
+    let maximumAllowable = 0;
+
+    if(totalPage > 1){
+        minimumAllowable = currentPage > 1 ? currentPage-1:0;
+        maximumAllowable = currentPage <= 1 ?
+            5 > totalPage ? totalPage : 5 :
+            currentPage+3 > totalPage ? totalPage : currentPage+3;
+    }
+
+
 
 
     let countPage = getPaginationList();

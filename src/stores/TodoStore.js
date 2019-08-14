@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from "axios";
 import {observable, action, computed, decorate} from 'mobx';
 
 export const quantituSize = {
@@ -7,23 +8,23 @@ export const quantituSize = {
     minimum: 10
 }
 
-
 class TodoStore {
     @observable inputSearch = "";
-    @observable pokemons = {};
+    @observable pokemon = {};
     @observable pageSize = quantituSize.minimum;
-    @observable totalPokemons = 0;
+    @observable totalPokemon = 0;
     @observable currentPage = 0;
     @observable ability = [];
+    @observable activeAbility = false;
     @observable activeSearch = false;
 
 
-    getAbility(){
+    getAbility() {
         return this.ability;
     }
 
     clearMass() {
-        this.pokemons = {}
+        this.pokemon = {}
     }
 
     setPageSize(action) {
@@ -32,11 +33,12 @@ class TodoStore {
     }
 
     getQuantituPage() {
-        return Math.ceil(this.totalPokemons / this.pageSize);
+        return Math.ceil(this.totalPokemon / this.pageSize);
     }
 
     setCurrentPage(action) {
         this.newCurrentPage(action);
+        this.setApiPokemins()
     }
 
     newCurrentPage(action) {
@@ -46,33 +48,21 @@ class TodoStore {
         this.setApiPokemins()
     }
 
-    setApiPokemins() {
-        fetch(`https://pokeapi.co/api/v2/pokemon/?limit=${this.pageSize}&offset=${this.currentPage * this.pageSize}`)
-            .then(res => res.json())
-            .then(json => {
-                this.totalPokemons = json.count;
-                this.setPokemins(json.results, 'pokemons')
-            })
-    };
 
+    setApiPokemins = async () => {
+        const result = await axios(
+            `https://pokeapi.co/api/v2/pokemon/?limit=${this.pageSize}&offset=${this.currentPage * this.pageSize}`
+        )
+        this.totalPokemon = result.data.count;
+        this.setPokemins(result.data.results, 'pokemon')
+    }
 
-    getObjPokemin(name, arr = 'pokemons') {
-        fetch(this[arr][name].url)
-            .then(res => res.json())
-            .then(json => {
-                const pokemons = {...this.pokemons}
-                pokemons[name] = {...pokemons[name], ...json}
-                this[arr] = pokemons
-            })
-    };
-
-
-    setPokemins(pokemonsList, toObj) {
-        const pokemons = {}
-        pokemonsList.forEach(({name, url}) => {
-            pokemons[name] = {url}
+    setPokemins(pokemonList, toObj) {
+        const pokemon = {}
+        pokemonList.forEach(({name, url}) => {
+            pokemon[name] = {url}
         });
-        this[toObj] = pokemons
+        this[toObj] = pokemon
     };
 
 
@@ -82,29 +72,27 @@ class TodoStore {
     // getting Pokémon in advanced search
     setActiveAbility(abilityList) {
         let arr = []
-        abilityList.forEach( url => {
+        abilityList.forEach(url => {
             fetch(url)
                 .then(res => res.json())
                 .then(json => {
-                    json.pokemon.forEach( item => {
+                    json.pokemon.forEach(item => {
                         arr.push(item.pokemon)
                     })
-                    debugger
-                    this.setPokemins(arr , 'pokemons');
+                    this.setPokemins(arr, 'pokemon');
                 })
         });
 
     }
 
     //getting Ability from api
-    setAbility() {
-        fetch(`https://pokeapi.co/api/v2/ability/?offset=20&limit=20`)
-            .then(res => res.json())
-            .then(json => {
-                let ability = [...this.ability];
-                ability = (json.results);
-                this.ability = ability
-            })
+    setAbility = async () => {
+        const result = await axios(
+            `https://pokeapi.co/api/v2/ability/?offset=20&limit=20` //I'm sorry, but I didn’t want to display all 260 Pokemon ability
+        );
+        let ability = [...this.ability];
+        ability = (result.data.results);
+        this.ability = ability
     }
 
     //set value input field
@@ -112,19 +100,18 @@ class TodoStore {
         this.inputSearch = action
     }
 
-    //getting all pokemons from api
-    getSearch() {
-        fetch(`https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${this.totalPokemons}`)
-            .then(res => res.json())
-            .then(json => {
-                this.setPokemins(json.results, 'pokemons')
-            })
+    //getting all pokemon from api
+    getSearch = async () => {
+        const result = await axios(
+            `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${this.totalPokemon}`
+        );
+        this.setPokemins(result.data.results, 'pokemon')
     };
 
-    //this.pokemons object output ( output all pokemons)
+    //this.pokemon object output ( output all pokemon)
     filterPokemon() {
         let matchesFilter = new RegExp(this.inputSearch, "i");
-        return Object.keys(this.pokemons).filter(name => matchesFilter.test(name))
+        return Object.keys(this.pokemon).filter(name => matchesFilter.test(name))
     }
 
 }

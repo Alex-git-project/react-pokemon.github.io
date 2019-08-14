@@ -1,20 +1,21 @@
-import React, {useEffect , useState} from 'react';
-import {inject, observer} from 'mobx-react';
+import React, {useEffect, useState} from 'react';
 import './postStyle.css';
+import axios from "axios";
 
-const Post = inject('TodoStore')(observer(props => {
-
+function Post(props) {
     const TodoStore = props.TodoStore;
-    debugger
-
-    const [pokemon , setPokemon] = useState(TodoStore.pokemons[props.name]);
+    //let pokemon =  TodoStore.pokemon[props.name];
+    const [pokemon, setData] = useState({});
 
     useEffect( () => {
-        fetch(TodoStore.pokemons[props.name].url)
-            .then(res => res.json())
-            .then(json => {
-                setPokemon(json)
-            });
+        let getObj = (async () => {
+            const result = await axios(
+                TodoStore.pokemon[props.name].url,
+            )
+            setData(result.data)
+        });
+        getObj();
+        //TodoStore.getObjPokemin(props.name)
     },[]);
 
 
@@ -40,7 +41,7 @@ const Post = inject('TodoStore')(observer(props => {
             </div>
         </li>
     );
-}));
+};
 
 /*@inject('TodoStore')
 @observer
@@ -52,7 +53,7 @@ class Post extends Component {
 
     render() {
         const TodoStore = this.props.TodoStore;
-        const pokemon = TodoStore.pokemons[this.props.name];
+        const pokemon = TodoStore.pokemon[this.props.name];
         let mass;
         let imagePokemon;
         if (pokemon.abilities) {
