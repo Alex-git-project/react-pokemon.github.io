@@ -1,35 +1,39 @@
 import React from 'react';
-import {inject, observer} from 'mobx-react';
+import {inject} from 'mobx-react';
 import './search.css'
 import '../App.css'
 import {debounce} from "lodash"
 
-const Search = inject('TodoStore')((props => {
-    const TodoStore = props.TodoStore;
+const Search = inject('PokemonStore')((props => {
+    const PokemonStore = props.PokemonStore;
 
     let propSymb = function (obj) {
         return Object.getOwnPropertyNames(obj)
     };
 
-    let pokemonCount = (propSymb(TodoStore.pokemon).length) - 1;
+    let pokemonCount = (propSymb(PokemonStore.pokemon).length) - 1;
 
     let updateInput = debounce((text) => {
-    debugger
-        text != "" ?
-            !TodoStore.activeAbility ?
-                TodoStore.totalPokemon != pokemonCount ?
-                    (TodoStore.getSearch(), TodoStore.updateSearch(text) , TodoStore.activeSearch = true) : false :
-                TodoStore.updateSearch(text) :
-            false
 
+        if(text != ""){
+            if(!PokemonStore.activeAbility){
+                if(PokemonStore.totalPokemon != pokemonCount){
+                    PokemonStore.getSearch()
+                    PokemonStore.updateSearch(text)
+                    PokemonStore.activeSearch = true
+                }
+            }  else {
+                PokemonStore.updateSearch(text)
+            }
+        }
 
         text == "" ?
-            !TodoStore.activeAbility ? (
-                TodoStore.clearMass(),
-                    TodoStore.activeSearch = false,
-                    TodoStore.setApiPokemins(),
-                    TodoStore.updateSearch(text)
-            ) : TodoStore.updateSearch(text) :
+            !PokemonStore.activeAbility ? (
+                PokemonStore.clearMass(),
+                    PokemonStore.activeSearch = false,
+                    PokemonStore.setApiPokemins(),
+                    PokemonStore.updateSearch(text)
+            ) : PokemonStore.updateSearch(text) :
             false;
 
     }, 2000);

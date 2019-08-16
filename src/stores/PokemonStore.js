@@ -8,7 +8,7 @@ export const quantituSize = {
     minimum: 10
 }
 
-class TodoStore {
+class PokemonStore {
     @observable inputSearch = "";
     @observable pokemon = {};
     @observable pageSize = quantituSize.minimum;
@@ -19,8 +19,10 @@ class TodoStore {
     @observable activeSearch = false;
 
 
-    getAbility() {
-        return this.ability;
+    setAbility(data) {
+        let ability = [...this.ability];
+        ability = data;
+        this.ability = ability
     }
 
     clearMass() {
@@ -85,16 +87,6 @@ class TodoStore {
 
     }
 
-    //getting Ability from api
-    setAbility = async () => {
-        const result = await axios(
-            `https://pokeapi.co/api/v2/ability/?offset=20&limit=20` //I'm sorry, but I didn’t want to display all 260 Pokemon ability
-        );
-        let ability = [...this.ability];
-        ability = (result.data.results);
-        this.ability = ability
-    }
-
     //set value input field
     updateSearch = (action) => {
         this.inputSearch = action
@@ -116,5 +108,5 @@ class TodoStore {
 
 }
 
-const store = new TodoStore();
+const store = new PokemonStore();
 export default store;

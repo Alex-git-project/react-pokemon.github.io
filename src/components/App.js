@@ -7,7 +7,7 @@ import AdvancedSearch from "./advancedSearch/AdvancedSearch";
 
 
 
-@inject('TodoStore')
+@inject('PokemonStore')
 @observer
 class App extends Component {
     render() {

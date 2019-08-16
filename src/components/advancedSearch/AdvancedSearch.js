@@ -1,7 +1,7 @@
-import React from 'react';
-import {inject, observer} from 'mobx-react';
+import React, {useEffect, useState,useMemo} from 'react';
+import {inject} from 'mobx-react';
 import './advancedSearch.css';
-import {isEmpty} from "../../additionalFunctions";
+import axios from "axios";
 
 function getCheckedCheckBoxes() {
     let selectedCheckBoxes = document.querySelectorAll('input.checkbox:checked');
@@ -9,42 +9,44 @@ function getCheckedCheckBoxes() {
     return checkedValues;
 }
 
-const AdvancedSearch = inject('TodoStore')(observer(props => {
-    let hiddenBox = document.getElementById('hiddenBox');
-    let hiddenList = document.getElementById('hiddenList');
-    const TodoStore = props.TodoStore;
+const AdvancedSearch = inject('PokemonStore')((props => {
+    let heightHiddenList = 300;//attention hardcode
+    let hiddenBox = React.createRef();
+    const [mass, setMass] = useState([]);
+    const PokemonStore = props.PokemonStore;
 
     //getting fields for advanced search
-    isEmpty(TodoStore.ability) ? TodoStore.setAbility() : false;
+    useEffect(() => {
+        let setAbility = async () => {
+            const result = await axios(
+                `https://pokeapi.co/api/v2/ability/?offset=20&limit=20` //I'm sorry, but I didn’t want to display all 260 Pokemon ability
+            )
+            setMass(result.data.results)
+            PokemonStore.setAbility(result.data.results)
+        };
+        setAbility();
+    },[]);
 
     function search(e) {
         e.preventDefault() //cancel click-through
         let dataSearch = getCheckedCheckBoxes(); //getting marked checkboxes
 
         dataSearch.length ?
-            (TodoStore.setActiveAbility(dataSearch), TodoStore.activeSearch = true , TodoStore.activeAbility = true) :
-            (TodoStore.setApiPokemins(), TodoStore.activeSearch = false, TodoStore.activeAbility = false) ;
-    }
-
-
-    //getting element height
-    function getHeight(obj) {
-        let style = window.getComputedStyle(obj);
-        return style.getPropertyValue('height');
+            (PokemonStore.setActiveAbility(dataSearch), PokemonStore.activeSearch = true , PokemonStore.activeAbility = true) :
+            (PokemonStore.setApiPokemins(), PokemonStore.activeSearch = false, PokemonStore.activeAbility = false);
     }
 
     //advanced search exit
     function active() {
-        parseInt(getHeight(hiddenBox)) == 0 ?
-            hiddenBox.style.height = (parseInt(getHeight(hiddenList)) + 40) + 'px' :
-            hiddenBox.style.height = '0px';
+        parseInt(hiddenBox.current.style.height) == 0 ?
+            hiddenBox.current.style.height = (heightHiddenList + 'px') :
+            hiddenBox.current.style.height = 0;
     }
 
-    let mass = TodoStore.getAbility();
     return (
         <div className='page-row'>
-            <div id='hiddenBox' className='listAbility hiddenBox'>
-                <form id='hiddenList' onSubmit={search}>
+            <div ref={hiddenBox} id='hiddenBox' className='listAbility hiddenBox'>
+                <form onSubmit={search}>
                     <ul className='listItemAdvansed'>
                         {mass.map(item =>
                             <li className='itemAdvansed'>

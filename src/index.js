@@ -5,10 +5,10 @@ import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
 
 import { Provider } from 'mobx-react';
-import TodoStore from './stores/TodoStore';
+import PokemonStore from './stores/PokemonStore';
 
 const Root = (
-  <Provider TodoStore={TodoStore}>
+  <Provider PokemonStore={PokemonStore}>
     <App />
   </Provider>
 );

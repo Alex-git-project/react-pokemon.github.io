@@ -1,9 +1,7 @@
 import React from 'react';
-import { inject, observer } from 'mobx-react';
 import './header.css'
 
-const Header = inject('TodoStore')(observer(props => {
-  const TodoStore = props.TodoStore;
+const Header = () => {
   return (
       <header>
           <div className="headerTitleSection">
@@ -13,6 +11,6 @@ const Header = inject('TodoStore')(observer(props => {
           </div>
       </header>
   );
-}));
+};
 
 export default Header;
